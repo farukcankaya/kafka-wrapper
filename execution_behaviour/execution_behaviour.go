@@ -7,6 +7,7 @@ import (
 
 type BehavioralSelector interface {
 	GetBehavioral(claim sarama.ConsumerGroupClaim) behavioral.BehaviourExecutor
+	GetErrorOperator() behavioral.LogicOperator
 }
 
 type retryBehaviourSelector struct {
@@ -38,4 +39,8 @@ func (r *retryBehaviourSelector) GetBehavioral(claim sarama.ConsumerGroupClaim) 
 	} else {
 		return behavioral.NormalBehavioral(r.producer, r.retryTopic, r.normalOperator)
 	}
+}
+
+func (r *retryBehaviourSelector) GetErrorOperator() behavioral.LogicOperator {
+	return r.errorOperator
 }

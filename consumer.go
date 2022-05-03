@@ -3,6 +3,8 @@ package kafka_wrapper
 import (
 	"context"
 	"github.com/Shopify/sarama"
+	"github.com/Trendyol/kafka-wrapper/execution_behaviour"
+	"github.com/Trendyol/kafka-wrapper/execution_behaviour/behavioral"
 	"strings"
 )
 
@@ -15,6 +17,21 @@ type EventHandler interface {
 	Setup(sarama.ConsumerGroupSession) error
 	Cleanup(sarama.ConsumerGroupSession) error
 	ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error
+	errorOperator() behavioral.LogicOperator
+}
+
+type eventHandler struct {
+	selector execution_behaviour.BehavioralSelector
+}
+
+func NewEventHandler(selector execution_behaviour.BehavioralSelector) *eventHandler {
+	return &eventHandler{
+		selector: selector,
+	}
+}
+
+func (e *eventHandler) errorOperator() behavioral.LogicOperator {
+	return e.selector.GetErrorOperator()
 }
 
 type kafkaConsumer struct {
@@ -42,7 +59,7 @@ func (c *kafkaConsumer) Subscribe(handler EventHandler) {
 	ctx, cancel := context.WithCancel(context.Background())
 	topics := func() []string {
 		result := make([]string, 0)
-		if c.errorTopic != "" {
+		if c.errorTopic != "" && handler.errorOperator() != nil {
 			result = append(result, c.errorTopic)
 		}
 		if c.retryTopic != "" {
