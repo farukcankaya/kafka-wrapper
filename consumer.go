@@ -15,6 +15,7 @@ type EventHandler interface {
 	Setup(sarama.ConsumerGroupSession) error
 	Cleanup(sarama.ConsumerGroupSession) error
 	ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error
+	ErrorOperator() LogicOperator
 }
 
 type kafkaConsumer struct {
@@ -42,7 +43,7 @@ func (c *kafkaConsumer) Subscribe(handler EventHandler) {
 	ctx, cancel := context.WithCancel(context.Background())
 	topics := func() []string {
 		result := make([]string, 0)
-		if c.errorTopic != "" {
+		if c.errorTopic != "" && handler.ErrorOperator() != nil {
 			result = append(result, c.errorTopic)
 		}
 		if c.retryTopic != "" {
