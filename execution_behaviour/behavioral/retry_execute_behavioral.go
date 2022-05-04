@@ -13,12 +13,12 @@ const RetryKey = "RetryCount"
 
 type retryBehaviour struct {
 	producer   sarama.SyncProducer
-	executor   LogicOperator
+	executor   kafka_wrapper.LogicOperator
 	retryCount int
 	errorTopic string
 }
 
-func RetryBehavioral(producer sarama.SyncProducer, errorTopic string, executor LogicOperator, retryCount int) BehaviourExecutor {
+func RetryBehavioral(producer sarama.SyncProducer, errorTopic string, executor kafka_wrapper.LogicOperator, retryCount int) BehaviourExecutor {
 	return &retryBehaviour{
 		producer:   producer,
 		executor:   executor,

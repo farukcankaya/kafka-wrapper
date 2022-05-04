@@ -1,4 +1,4 @@
-package behavioral
+package kafka_wrapper
 
 import (
 	"context"

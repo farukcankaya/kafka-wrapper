@@ -2,6 +2,7 @@ package execution_behaviour
 
 import (
 	"github.com/Shopify/sarama"
+	"github.com/Trendyol/kafka-wrapper"
 	"github.com/Trendyol/kafka-wrapper/execution_behaviour/behavioral"
 )
 
@@ -10,15 +11,15 @@ type BehavioralSelector interface {
 }
 
 type retryBehaviourSelector struct {
-	normalOperator behavioral.LogicOperator
-	errorOperator  behavioral.LogicOperator
+	normalOperator kafka_wrapper.LogicOperator
+	errorOperator  kafka_wrapper.LogicOperator
 	producer       sarama.SyncProducer
 	retryTopic     string
 	errorTopic     string
 	retryCount     int
 }
 
-func NewRetryBehaviourSelector(normalOperator behavioral.LogicOperator, errorOperator behavioral.LogicOperator, producer sarama.SyncProducer,
+func NewRetryBehaviourSelector(normalOperator kafka_wrapper.LogicOperator, errorOperator kafka_wrapper.LogicOperator, producer sarama.SyncProducer,
 	retryCount int, retryTopic, errorTopic string) *retryBehaviourSelector {
 	return &retryBehaviourSelector{
 		normalOperator: normalOperator,

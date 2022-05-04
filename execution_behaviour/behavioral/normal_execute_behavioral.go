@@ -8,11 +8,11 @@ import (
 
 type normalBehaviour struct {
 	producer   sarama.SyncProducer
-	executor   LogicOperator
+	executor   kafka_wrapper.LogicOperator
 	retryTopic string
 }
 
-func NormalBehavioral(producer sarama.SyncProducer, retryTopic string, executor LogicOperator) BehaviourExecutor {
+func NormalBehavioral(producer sarama.SyncProducer, retryTopic string, executor kafka_wrapper.LogicOperator) BehaviourExecutor {
 	return &normalBehaviour{
 		producer:   producer,
 		executor:   executor,

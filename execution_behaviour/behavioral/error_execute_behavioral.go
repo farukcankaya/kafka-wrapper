@@ -3,13 +3,14 @@ package behavioral
 import (
 	"context"
 	"github.com/Shopify/sarama"
+	"github.com/Trendyol/kafka-wrapper"
 )
 
 type errorBehaviour struct {
-	executor LogicOperator
+	executor kafka_wrapper.LogicOperator
 }
 
-func ErrorBehavioral(executor LogicOperator) BehaviourExecutor {
+func ErrorBehavioral(executor kafka_wrapper.LogicOperator) BehaviourExecutor {
 	return &errorBehaviour{
 		executor: executor,
 	}
